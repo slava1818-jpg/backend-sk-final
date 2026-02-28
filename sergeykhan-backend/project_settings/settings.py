@@ -44,14 +44,16 @@ else:
         'https://backend-sk-final-production-d5dd.up.railway.app',
         'https://sergeykhan-backend-production.up.railway.app',
         'https://*.railway.app',
-        'https://sergey-khan-web-visitor.vercel.app/',
+        'https://sergey-khan-web-visitor.vercel.app',   # убран лишний слэш
         'https://sergey-khan-web-gamma.vercel.app',
         'https://*.vercel.app',
         'https://sergey-khan-operator-liard.vercel.app',
         'https://sergey-khan-garant-master.vercel.app',
         'https://sergey-khan-admin.vercel.app',
         'https://sergey-khan-master.vercel.app',
-        'https://sergey-khan-curator.vercel.app'
+        'https://sergey-khan-curator.vercel.app',
+        'https://xanservice.org',
+        'https://www.xanservice.org',
     ]
 
 # Security settings for production
@@ -76,9 +78,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # For static files in production
-    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.security.SecurityMiddleware',   # MUST be first
+    'whitenoise.middleware.WhiteNoiseMiddleware',      # Right after Security for static files
+    'corsheaders.middleware.CorsMiddleware',           # Before any response-generating middleware
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -160,16 +162,20 @@ if not CORS_ALLOW_ALL_ORIGINS:
             "https://backend-sk-final-production-d5dd.up.railway.app",
             "https://sergey-khan-web-gamma.vercel.app",
             "https://sergeykhan-backend-production.up.railway.app",
-            "https://*.railway.app",
+            # wildcard здесь НЕ работает — перенесён в CORS_ALLOWED_ORIGIN_REGEXES ниже
             "https://sergey-khan-web-visitor.vercel.app",
             "https://sergey-khan-operator-liard.vercel.app",
             "https://sergey-khan-garant-master.vercel.app",
             "https://sergey-khan-admin.vercel.app",
             "https://sergey-khan-master.vercel.app",
             "https://sergey-khan-curator.vercel.app",
-            "https://backend-sk-final-production-d5dd.up.railway.app",
             "https://xanservice.org",
-            "https://www.xanservice.org"
+            "https://www.xanservice.org",
+        ]
+        # Wildcard-паттерны для CORS (django-cors-headers поддерживает только regex)
+        CORS_ALLOWED_ORIGIN_REGEXES = [
+            r"^https://[\w-]+\.railway\.app$",
+            r"^https://[\w-]+\.vercel\.app$",
         ]
 
 CORS_ALLOW_CREDENTIALS = True
